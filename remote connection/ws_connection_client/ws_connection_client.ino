@@ -1,8 +1,8 @@
 #include <WiFi.h>
 #include <WebSocketsClient.h>
 
-const char* ssid = "ENG_SEU_Student1";
-const char* password = "engstudent1";
+const char* ssid = "Nish_DRouter";
+const char* password = "Nishan622";
 
 WebSocketsClient webSocket;
 
@@ -37,7 +37,7 @@ void setup() {
   Serial.println("Connected to WiFi");
 
   // Setup WebSocket connection
-  webSocket.begin("172.20.114.198", 8080, "/");
+  webSocket.begin("192.168.8.172", 8080, "/");
 
   webSocket.onEvent(webSocketEvent);
 }
