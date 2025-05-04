@@ -1,8 +1,9 @@
 #include <WiFi.h>
 #include <WebSocketsClient.h>
 
-const char* ssid = "Nish_DRouter";
-const char* password = "Nishan622";
+const char* ssid = "wifi ssid";
+const char* password = "wifi password";
+
 
 WebSocketsClient webSocket;
 
@@ -37,7 +38,7 @@ void setup() {
   Serial.println("Connected to WiFi");
 
   // Setup WebSocket connection
-  webSocket.begin("192.168.8.172", 8080, "/");
+  webSocket.begin("Pi's Ip address", 8080, "/");
 
   webSocket.onEvent(webSocketEvent);
 }

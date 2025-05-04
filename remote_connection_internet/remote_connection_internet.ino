@@ -1,8 +1,8 @@
 #include <WiFi.h>
 #include <WebSocketsClient.h>
 
-const char* ssid = "ENG_SEU_Student";
-const char* password = "engstudent";
+const char* ssid = "wifi ssid";
+const char* password = "wifi password";
 
 WebSocketsClient webSocket;
 
@@ -47,7 +47,7 @@ void setup() {
   }
   Serial.println("\nConnected to WiFi");
 
-  webSocket.beginSSL("evenly-pure-titmouse.ngrok-free.app", 443, "/");
+  webSocket.beginSSL("domain name of the ngrok tunnel", 443, "/");
   webSocket.onEvent(webSocketEvent);
   webSocket.setReconnectInterval(5000);
 }
