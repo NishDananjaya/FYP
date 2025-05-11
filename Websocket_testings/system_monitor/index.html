@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Monitor</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 100%; max-width: 600px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h1>System Monitor</h1>
+    <table id="metricsTable">
+        <tr><th>Metric</th><th>Value</th></tr>
+        <tr><td>Timestamp</td><td id="timestamp">-</td></tr>
+        <tr><td>CPU Usage (%)</td><td id="cpu_percent">-</td></tr>
+        <tr><td>CPU Frequency (MHz)</td><td id="cpu_frequency">-</td></tr>
+        <tr><td>Memory Used (GB)</td><td id="memory_used">-</td></tr>
+        <tr><td>Memory Total (GB)</td><td id="memory_total">-</td></tr>
+        <tr><td>Memory Usage (%)</td><td id="memory_percent">-</td></tr>
+        <tr><td>Disk Used (GB)</td><td id="disk_used">-</td></tr>
+        <tr><td>Disk Free (GB)</td><td id="disk_free">-</td></tr>
+        <tr><td>Disk Usage (%)</td><td id="disk_percent">-</td></tr>
+        <tr><td>Network Sent (MB)</td><td id="network_sent">-</td></tr>
+        <tr><td>Network Received (MB)</td><td id="network_recv">-</td></tr>
+        <tr><td>Uptime (s)</td><td id="uptime">-</td></tr>
+        <tr><td>CPU Temperature (°C)</td><td id="cpu_temperature">-</td></tr>
+    </table>
+
+    <script>
+        const ws = new WebSocket("wss://evenly-pure-titmouse.ngrok-free.app");
+
+        ws.onmessage = function(event) {
+            const metrics = JSON.parse(event.data);
+            updateTable(metrics);
+        };
+
+        ws.onopen = function() {
+            console.log("Connected to WebSocket server");
+        };
+
+        ws.onerror = function(error) {
+            console.error("WebSocket error:", error);
+        };
+
+        function updateTable(metrics) {
+            document.getElementById("timestamp").textContent = metrics.timestamp || "-";
+            document.getElementById("cpu_percent").textContent = metrics.cpu_percent?.toFixed(2) || "-";
+            document.getElementById("cpu_frequency").textContent = metrics.cpu_frequency?.current
+                ? `${metrics.cpu_frequency.current.toFixed(2)} / ${metrics.cpu_frequency.max.toFixed(2)}`
+                : "-";
+            document.getElementById("memory_used").textContent = metrics.memory?.used?.toFixed(2) || "-";
+            document.getElementById("memory_total").textContent = metrics.memory?.total?.toFixed(2) || "-";
+            document.getElementById("memory_percent").textContent = metrics.memory?.percent?.toFixed(2) || "-";
+            document.getElementById("disk_used").textContent = metrics.disk?.used?.toFixed(2) || "-";
+            document.getElementById("disk_free").textContent = metrics.disk?.free?.toFixed(2) || "-";
+            document.getElementById("disk_percent").textContent = metrics.disk?.percent?.toFixed(2) || "-";
+            document.getElementById("network_sent").textContent = metrics.network?.bytes_sent?.toFixed(2) || "-";
+            document.getElementById("network_recv").textContent = metrics.network?.bytes_recv?.toFixed(2) || "-";
+            document.getElementById("uptime").textContent = metrics.uptime?.toFixed(0) || "-";
+            document.getElementById("cpu_temperature").textContent = metrics.cpu_temperature?.toFixed(2) || "-";
+        }
+
+        // Fetch initial metrics
+        fetch("https://evenly-pure-titmouse.ngrok-free.app/metrics")
+            .then(response => response.json())
+            .then(data => updateTable(data))
+            .catch(error => console.error("Error fetching initial metrics:", error));
+    </script>
+</body>
+</html>
