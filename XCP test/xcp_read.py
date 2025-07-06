@@ -3,7 +3,7 @@ import time
 
 spi = spidev.SpiDev()
 spi.open(0, 0)
-spi.max_speed_hz = 500000  # Set to 100 kHz for reliability
+spi.max_speed_hz = 500000  
 spi.mode = 0b00  # SPI Mode 0 (CPOL=0, CPHA=0)
 
 def send_command(cmd):
